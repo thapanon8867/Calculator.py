@@ -1,6 +1,6 @@
 # Calculator.py
-# Version 1.11.2
-VERSION = "1.11.2"
+# Version 1.11.3
+VERSION = "1.11.3"
 
 # Import things
 import math
