@@ -318,13 +318,18 @@ class DataHandler :
 def WhatNew() :
     print("")
     print(
-        "Version 11.0"
+        "Version 1.11.0"
         "\n1. Add History System",
         "\n2. Fixed Bug", "\n"
     )
     print(
-        "Version 11.2",
-        "\n1. Add Toggle History System", "\n\n"
+        "Version 1.11.2",
+        "\n1. Add Toggle History System", "\n"
+    )
+    print(
+        "Version 1.11.3"
+        "\n1. Delete Manual"
+        "\n2. Fixed Bug", "\n\n"
     )
 
 def Move() :
@@ -395,11 +400,11 @@ def Run(HistoriesFile, Data) :
         elif Input in ("rt", "root") :
             Root()
         
-        elif Input in ("!") :
+        elif Input == "!" :
             Factorial()
         
         ## Functions
-        elif Input in ("move") :
+        elif Input == "move" :
             time.sleep(SLEEP_TIME)
 
             Move()
