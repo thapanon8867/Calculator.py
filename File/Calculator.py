@@ -1,6 +1,6 @@
 # Calculator.py
-# Version 1.11.3
-VERSION = "1.11.3"
+# Version 1.11.4
+VERSION = "1.11.4"
 
 # Import things
 import math
@@ -30,11 +30,11 @@ def Ask2number() :
             print("\n")
 
             #Ask A
-            a = float(input("A = "))
+            a = float(input("A = ").replace(",", ""))
             print(a,"\n")
 
             #Ask B
-            b = float(input("B = "))
+            b = float(input("B = ").replace(",", ""))
             print(b,"\n")
 
             break
@@ -50,7 +50,7 @@ def Ask1number() :
             print("\n")
 
             #Ask A
-            a = float(input("A = "))
+            a = float(input("A = ").replace(",", ""))
             print(a,"\n")
 
             break
@@ -329,7 +329,11 @@ def WhatNew() :
     print(
         "Version 1.11.3"
         "\n1. Delete Manual"
-        "\n2. Fixed Bug", "\n\n"
+        "\n2. Fixed Bug", "\n"
+    )
+    print(
+        "Version 1.11.4"
+        "\n1. Fixed Comma Error\n\n"
     )
 
 def Move() :
