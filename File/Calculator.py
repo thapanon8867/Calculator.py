@@ -340,7 +340,8 @@ def WhatNew() :
     )
     print(
         "Version 1.11.4"
-        "\n1. Fixed Comma Error\n\n"
+        "\n1. Fixed Comma Error",
+        "\n2. Fixed Bug\n\n"
     )
 
 def Move() :
