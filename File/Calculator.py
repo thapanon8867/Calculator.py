@@ -1,6 +1,6 @@
 # Calculator.py
 # Version 1.11.4
-VERSION = "1.11.4"
+VERSION = [1, 11, 4, None]
 
 # Import things
 import math
@@ -9,16 +9,17 @@ import os
 import json
 
 # Configs
-VERSION_MESSAGE = f"Version {VERSION} : What's new"
+VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]} : What's new"
 SLEEP_TIME = 1
 CLOSE_TIME = 4
 VALUEERROR = "Invalid input!: Try again."
-ZERODIVISIONERROR = "Cann't divided by 0!\n\n"
+ZERODIVISIONERROR = "Cann't divided by zero!\n\n"
 ERROR = "An expected error occurred:"
 
 # DataFile
 Data = {
-    "SaveHistories" : True ,
+    "Version" : VERSION, 
+    "SaveHistories" : True,
     "Histories" : []
 }
 
@@ -289,22 +290,28 @@ class DataHandler :
             
     def save(self, data) :
         try :
-            with open(self.__Address_file, "w") as file :
-                json.dump(data, file, indent=4) # Push
+            if data != None:
+                with open(self.__Address_file, "w") as file :
+                    json.dump(data, file, indent=4) # Push
         except FileNotFoundError as e:
-            print(f"Error saving data: File Not Found -- {e}")
+            print(f"Error while saving data: File Not Found -- {e}")
         except Exception as e :
-            print("Error saving data:", e)
+            print("Error while saving data:", e)
     
     def get(self) :
         try :
             with open(self.__Address_file,"r") as file :
                 data = json.load(file) # Pull
+
+            if data["Version"] != VERSION:
+                raise FileNotFoundError("Wrong Version -- Please Update Your Data First")
+
             return data # Send
         except FileNotFoundError as e:
-            print(f"Error saving data: File Not Found -- {e} -- Restart the program.")
+            print(f"Error while geting data: File Not Found -- {e} -- Then restart the program.")
+            return None
         except Exception as e :
-            print("Error geting data:", e)
+            print("Error while geting data:", e)
 
     def DoFirst(self, EmptyData) :
         if self.EverExists == False :
@@ -435,4 +442,7 @@ def Run(HistoriesFile, Data) :
 DataFile = DataHandler("All Data.json")
 Data = DataFile.DoFirst(Data)
 
-Run(DataFile, Data)
+if Data != None:
+    Run(DataFile, Data)
+else:
+    input("Enter To Leave")
