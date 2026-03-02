@@ -7,17 +7,24 @@ import time
 import os
 import json
 
+# Import Keyboard
+try:
+    import keyboard
+except ModuleNotFoundError:
+    input("Please Install keyboard first.")
+    exit()
+
 # Import Rich
 try:
     from rich.console import Console
-    from rich.style import Style
     from rich.align import Align
     from rich.layout import Layout
     from rich.panel import Panel
     from rich.table import Table
     from rich.traceback import install as tbinstall
 except ModuleNotFoundError:
-    print("Please Install rich first")
+    input("Please Install rich first.")
+    exit()
 
 # Configs
 VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]}"
@@ -277,6 +284,7 @@ def WhatsNew() :
         expand=False
     )
     console.print(panel)
+    console.input()
 
 def Move() :
     console.clear()
