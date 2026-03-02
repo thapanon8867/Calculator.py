@@ -65,72 +65,34 @@ def Ask1number(Aprompt="A? > ") :
             console.print(VALUEERROR, "\n")
     return a
 
+def processOperation(op_func, symbol, Aprompt="A? > ", Bprompt="B? > "):
+    try:
+        a, b = Ask2number(Aprompt, Bprompt)
+        with console.status("[bold green]Thinking..."):
+            # Finding Answer
+            answer = op_func(a,b)
+            if answer == int(answer): answer = int(answer) # If can int then int
+
+            # Saving
+            if Data["SaveHistories"]:
+                Data["Histories"].append(f"{a} {symbol} {b} = {answer}")
+            
+            time.sleep(SLEEP_TIME)
+        console.print(f"[bold yellow]Answer = {answer}")
+    except OverflowError:
+        console.print(OVERFLOWERROR)
+    except Exception as e:
+        console.print(ERROR, e)
+
 # Operator Functions
 def Plus() :
-    try :
-        # Ask
-        a, b = Ask2number()
-
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = a + b
-            #Float -> Int
-            if Answer == int(Answer) :
-                Answer = int(Answer)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} + {b} = {Answer}")
-            # Show Answer
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {Answer}")
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    processOperation(lambda a, b: a + b, "+")
 
 def Minus() :
-    try :
-        # Ask
-        a, b = Ask2number()
-
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = a - b
-            #Float -> Int
-            if Answer == int(Answer):
-                Answer = int(Answer)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} - {b} = {Answer}")
-            # Show Answer
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {Answer}")
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    processOperation(lambda a, b: a - b, "-")
 
 def Times() :
-    try:
-        # Ask
-        a, b = Ask2number()
-
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = a * b
-            #Float -> Int
-            if Answer == int(Answer) :
-                Answer = int(Answer)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} * {b} = {Answer}")
-            # Show Answer
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {Answer}")
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    processOperation(lambda a, b: a * b, "*")
 
 def Divide() :
     try :
@@ -156,26 +118,7 @@ def Divide() :
         console.print(ERROR , Reason)
 
 def Power() :
-    try :
-        # Ask
-        a, b = Ask2number(Bprompt="Power of ")
-
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = a ** b
-            #Float -> Int
-            if Answer == int(Answer) :
-                Answer = int(Answer)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} ^ {b} = {Answer}")
-            # Show Answer
-            time.sleep(SLEEP_TIME)
-            console.print(f"[bold yellow]Answer = {Answer}")
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    processOperation(lambda a, b: a ** b, "**", Bprompt="Power of ")
 
 def Root() :
     try :
