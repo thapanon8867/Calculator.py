@@ -376,7 +376,7 @@ def Run(HistoriesFile, Data) :
             case _ :
                 console.input("[bold red]Invalid command.")
         
-        keyboard.wait("space")
+        keyboard.wait("enter")
         Move()
 
 # Code
