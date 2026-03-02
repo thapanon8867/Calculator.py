@@ -69,13 +69,13 @@ def Plus() :
     try :
         # Ask
         a, b = Ask2number()
-        # Calculate
-        Answer = a + b
-        #Float -> Int
-        if Answer == int(Answer) :
-            Answer = int(Answer)
 
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = a + b
+            #Float -> Int
+            if Answer == int(Answer) :
+                Answer = int(Answer)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} + {b} = {Answer}")
@@ -89,13 +89,13 @@ def Minus() :
     try :
         # Ask
         a, b = Ask2number()
-        # Calculate
-        Answer = a - b
-        #Float -> Int
-        if Answer == int(Answer):
-            Answer = int(Answer)
 
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = a - b
+            #Float -> Int
+            if Answer == int(Answer):
+                Answer = int(Answer)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} - {b} = {Answer}")
@@ -109,13 +109,13 @@ def Times() :
     try:
         # Ask
         a, b = Ask2number()
-        # Calculate
-        Answer = a * b
-        #Float -> Int
-        if Answer == int(Answer) :
-            Answer = int(Answer)
 
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = a * b
+            #Float -> Int
+            if Answer == int(Answer) :
+                Answer = int(Answer)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} * {b} = {Answer}")
@@ -129,11 +129,11 @@ def Divide() :
     try :
         # Ask
         a, b = Ask2number()
-        # Calculate
-        Answer = a / b
-        Remander = int(a % b)
-        
+
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = a / b
+            Remander = int(a % b)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} / {b} = {Answer}")
@@ -150,13 +150,13 @@ def Power() :
     try :
         # Ask
         a, b = Ask2number(Bprompt="Power of ")
-        # Calculate
-        Answer = a ** b
-        #Float -> Int
-        if Answer == int(Answer) :
-            Answer = int(Answer)
 
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = a ** b
+            #Float -> Int
+            if Answer == int(Answer) :
+                Answer = int(Answer)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} ^ {b} = {Answer}")
@@ -172,14 +172,14 @@ def Root() :
         # Ask
         console.print("[bold green]nth root of a number")
         n, a = Ask2number("n? > ", "a? > ")
-        # Calculate
-        if a <= 0 and a % 2 != 0 and n <= 0: raise ValueError
-        Answer = a ** (1/n)
-        #Float -> Int
-        if Answer == int(Answer) :
-            Answer = int(Answer)
 
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            if a <= 0 and a % 2 != 0 and n <= 0: raise ValueError
+            Answer = a ** (1/n)
+            #Float -> Int
+            if Answer == int(Answer) :
+                Answer = int(Answer)
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a} ^ ({1}/{n}) = {Answer}")
@@ -197,10 +197,10 @@ def Factorial() :
         a = Ask1number()
         if int(a) != a or math.fabs(a) != a:
             raise ValueError
-        # Calculate
-        Answer = math.factorial(int(a))
-
+        
         with console.status("[bold green]Thinking...") as _:
+            # Calculate
+            Answer = math.factorial(int(a))
             # Save
             if Data["SaveHistories"] == True :
                 Data["Histories"].append(f"{a}! = {Answer}")
