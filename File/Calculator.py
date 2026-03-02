@@ -1,5 +1,4 @@
 # Calculator.py
-# Version 1.11.4
 VERSION = [1, 11, 4, None]
 
 # Import things
@@ -7,7 +6,6 @@ import math
 import time
 import os
 import json
-
 
 # Import Rich
 try:
@@ -241,9 +239,9 @@ class DataHandler :
                 with open(self.__Address_file, "w") as file :
                     json.dump(data, file, indent=4) # Push
         except FileNotFoundError as e:
-            print(f"Error while saving data: File Not Found -- {e}")
+            console.print(f"[bold red]Error while saving data: File Not Found [/]-- {e}")
         except Exception as e :
-            print("Error while saving data:", e)
+            console.print("[bold red]Error while saving data:", e)
     
     def get(self) :
         try :
@@ -268,27 +266,17 @@ class DataHandler :
             return self.get()
 
 # Functions
-def WhatNew() :
-    print("")
-    print(
-        "Version 1.11.0"
-        "\n1. Add History System",
-        "\n2. Fixed Bug", "\n"
+def WhatsNew() :
+    message = Table(box=None, show_header=False)
+    message.add_row("1.", "Fix any unclear operation descriptions.")
+    message.add_row("2.", "Use Library Rich to make the terminal colorful and easy to read.")
+
+    panel = Panel(
+        message,
+        title=f"[bold]What's new?[/] [dim italic]-- v{VERSION[0]}.{VERSION[1]}.{VERSION[2]}-{VERSION[3] or "0"}",
+        expand=False
     )
-    print(
-        "Version 1.11.2",
-        "\n1. Add Toggle History System", "\n"
-    )
-    print(
-        "Version 1.11.3"
-        "\n1. Delete Manual"
-        "\n2. Fixed Bug", "\n"
-    )
-    print(
-        "Version 1.11.4"
-        "\n1. Fixed Comma Error",
-        "\n2. Fixed Bug\n\n"
-    )
+    console.print(panel)
 
 def Move() :
     console.clear()
@@ -376,7 +364,7 @@ def Run(HistoriesFile, Data) :
             case "h":
                 ShowHistories()
             case "n":
-                WhatNew()
+                WhatsNew()
             case "l" | "exit":
                 HistoriesFile.save(Data)
                 exit()
@@ -384,7 +372,6 @@ def Run(HistoriesFile, Data) :
                 console.input("[bold red]Invalid command.")
         
         Move()
-
 
 # Code
 DataFile = DataHandler("All Data.json")
