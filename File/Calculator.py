@@ -7,13 +7,6 @@ import time
 import os
 import json
 
-# Import Keyboard
-try:
-    import keyboard
-except ModuleNotFoundError:
-    input("Please Install keyboard first.")
-    exit()
-
 # Import Rich
 try:
     from rich.console import Console
@@ -374,9 +367,11 @@ def Run(HistoriesFile, Data) :
                 HistoriesFile.save(Data)
                 exit()
             case _ :
-                console.input("[bold red]Invalid command.")
+                console.print("[bold red]Invalid command.")
         
-        keyboard.wait("enter")
+        with console.status("[dim]Press enter to continue", spinner=None):
+            console.input()
+
         Move()
 
 # Code
