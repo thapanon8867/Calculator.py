@@ -14,6 +14,7 @@ try:
     from rich.layout import Layout
     from rich.panel import Panel
     from rich.table import Table
+    from rich.spinner import Spinner
     from rich.traceback import install as tbinstall
 except ModuleNotFoundError:
     input("Please Install rich first.")
@@ -369,7 +370,7 @@ def Run(HistoriesFile, Data) :
             case _ :
                 console.print("[bold red]Invalid command.")
         
-        with console.status("[dim]Press enter to continue", spinner=None):
+        with console.status("[blink dim]Press enter to continue", spinner="clock"):
             console.input()
 
         Move()
