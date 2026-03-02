@@ -1,9 +1,14 @@
 # Python Calculator
-📌Calculator For Everyone📌<br/>
+📌Terminal Calculator For Everyone📌<br/>
 
-> [!IMPORTANT]
-> You must download Python first. [Download Here](https://www.python.org/)\
-> ***Python Version 3.13.3***
+> [!IMPORTANT] Requirement
+> You must download Python first. [Download Here](https://www.python.org/downloads/release/python-3143/)\
+> ***Python Version 3.14.3***<hr>
+> You must also install the “rich” library.\
+> **Use this command in your terminal:**
+> ```bash
+> pip install rich
+> ```
 
-> [!TIP]
-> Manual -> [Click Here](https://github.com/thapanon8867/Calculator.py/wiki "Click Here")
+> [!TIP] How to use?
+> Manual -> [Click Here](https://github.com/thapanon8867/Calculator.py/wiki "Click Here").
