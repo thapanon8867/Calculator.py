@@ -237,11 +237,8 @@ def WhatsNew() :
 def Move() :
     console.clear()
 
-def ShowHistories() :
-    global Data
-
-    histories = Data["Histories"]
-
+def ShowHistories(data) :
+    histories = data["Histories"]
     hisTable = Table(box=None, show_header=False)
 
     if len(histories) == 0 :
@@ -252,14 +249,14 @@ def ShowHistories() :
 
     hisPanel = Panel(hisTable, title="[bold]Calculation Histories", expand=False)
     console.print(hisPanel)
-    if Data["SaveHistories"]: console.print(f"[bold][cyan]Save History? = [/cyan][green]{Data["SaveHistories"]}")
-    else: console.print(f"[bold][cyan]Save History? = [/cyan][red]{Data["SaveHistories"]}")
+    if data["SaveHistories"]: console.print(f"[bold][cyan]Save History? = [/cyan][green]{data["SaveHistories"]}")
+    else: console.print(f"[bold][cyan]Save History? = [/cyan][red]{data["SaveHistories"]}")
 
     # Del?
     Input = console.input("[bold]Do you want to clear histories? \\[y/N]    ").lower()
     if Input == "y":
         with console.status("[bold green]Working...") as _: # Make Loading
-            Data["Histories"] = []
+            data["Histories"] = []
             time.sleep(SLEEP_TIME)
         console.print("    [bold yellow]Histories cleared.")
     
@@ -267,11 +264,13 @@ def ShowHistories() :
     Input = console.input("[bold]Toggle histories? \\[y/N]    ").lower()
     if Input == "y":
         with console.status("[bold green]Working...") as _:
-            Data["SaveHistories"] = not Data["SaveHistories"]
+            data["SaveHistories"] = not data["SaveHistories"]
             time.sleep(SLEEP_TIME)
-        code = "green" if Data["SaveHistories"] else "red"
-        ncode = "red" if Data["SaveHistories"] else "green"
-        console.print(f"    [bold][yellow]Toggled from [/yellow][{ncode}]{not Data["SaveHistories"]}[/{ncode}] -> [{code}]{Data["SaveHistories"]}[/{code}].")
+        code = "green" if data["SaveHistories"] else "red"
+        ncode = "red" if data["SaveHistories"] else "green"
+        console.print(f"    [bold][yellow]Toggled from [/yellow][{ncode}]{not data["SaveHistories"]}[/{ncode}] -> [{code}]{data["SaveHistories"]}[/{code}].")
+
+    return data
 
 def getMenuPanel():
     # Create Menu Table
@@ -308,7 +307,7 @@ def Run(HistoriesFile, Data) :
             case "5": Power()
             case "6": Root()
             case "7": Factorial()
-            case "h": ShowHistories()
+            case "h": Data = ShowHistories(Data)
             case "n": WhatsNew()
             case "l" | "exit": HistoriesFile.save(Data); exit()
             case _ : console.print("[bold red]Invalid command."); continue
