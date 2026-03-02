@@ -34,8 +34,7 @@ console = Console()
 layout = Layout()
 
 # Custom Errors
-class VersionError(Exception):
-    pass
+class VersionError(Exception): pass
 
 # Center Functions
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
@@ -326,18 +325,24 @@ def Run(data) :
 
         Move()
 
-# Get Data
 data_template = {
     "Version" : VERSION, 
     "SaveHistories" : True,
     "Histories" : []
 }
 
-data_file = DataHandler("All Data.json", data_template)
-Data = data_file.data
-
 # Code
-Run(Data)
+try:
+    # Get Data
+    data_file = DataHandler("All Data.json", data_template)
+    Data = data_file.data
 
-# Save Data
-data_file.save(Data)
+    Run(Data) # Work
+
+    # Save Data
+    with console.status("Saving...", spinner="arc"):
+        data_file.save(Data)
+        time.sleep(SLEEP_TIME)
+except KeyboardInterrupt:
+    console.print("[bold red]The program is closing suddenly... Saving data.")
+    if "Data" in locals(): data_file.save(Data) # Save
