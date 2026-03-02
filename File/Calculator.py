@@ -87,7 +87,7 @@ def Plus() :
                 Data["Histories"].append(f"{a} + {b} = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-        console.input(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -107,7 +107,7 @@ def Minus() :
                 Data["Histories"].append(f"{a} - {b} = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-        console.input(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -127,7 +127,7 @@ def Times() :
                 Data["Histories"].append(f"{a} * {b} = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-        console.input(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -146,7 +146,7 @@ def Divide() :
             # Show Answer
             time.sleep(SLEEP_TIME)
             console.print(f"[bold yellow]Answer = {Answer}")
-            console.input(f"[dim yellow]Remander = {Remander}")
+            console.print(f"[dim yellow]Remander = {Remander}")
     except ZeroDivisionError :
         console.print(ZERODIVISIONERROR)
     except Exception as Reason :
@@ -168,7 +168,7 @@ def Power() :
                 Data["Histories"].append(f"{a} ^ {b} = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-            console.input(f"[bold yellow]Answer = {Answer}")
+            console.print(f"[bold yellow]Answer = {Answer}")
 
     except Exception as Reason :
         console.print(ERROR , Reason)
@@ -191,7 +191,7 @@ def Root() :
                 Data["Histories"].append(f"{a} ^ ({1}/{n}) = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-            console.input(f"[bold yellow]Answer = {Answer}")
+            console.print(f"[bold yellow]Answer = {Answer}")
     except ValueError :
         console.print(VALUEERROR)
     except Exception as Reason :
@@ -212,7 +212,7 @@ def Factorial() :
                 Data["Histories"].append(f"{a}! = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-        console.input(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {Answer}")
     except ValueError :
         console.print(VALUEERROR)
     except Exception as Reason :
@@ -284,7 +284,6 @@ def WhatsNew() :
         expand=False
     )
     console.print(panel)
-    console.input()
 
 def Move() :
     console.clear()
@@ -324,8 +323,6 @@ def ShowHistories() :
         code = "green" if Data["SaveHistories"] else "red"
         ncode = "red" if Data["SaveHistories"] else "green"
         console.print(f"    [bold][yellow]Toggled from [/yellow][{ncode}]{not Data["SaveHistories"]}[/{ncode}] -> [{code}]{Data["SaveHistories"]}[/{code}].")
-    
-    console.input()
 
 def getMenuPanel():
     # Create Menu Table
@@ -379,6 +376,7 @@ def Run(HistoriesFile, Data) :
             case _ :
                 console.input("[bold red]Invalid command.")
         
+        keyboard.wait("space")
         Move()
 
 # Code
