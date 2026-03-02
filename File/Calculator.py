@@ -33,12 +33,9 @@ tbinstall(); del tbinstall
 console = Console()
 layout = Layout()
 
-# DataFile
-Data = {
-    "Version" : VERSION, 
-    "SaveHistories" : True,
-    "Histories" : []
-}
+# Custom Errors
+class VersionError(Exception):
+    pass
 
 # Center Functions
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
@@ -169,57 +166,61 @@ def Factorial() :
 
 # Save Class
 class DataHandler :
-    Address_script = os.path.abspath(__file__)
-    Address_scriptFolder = os.path.dirname(Address_script)
-    Address_dataCenter = os.path.join(Address_scriptFolder, "Data")
-    
+    # Locate data center
+    script = os.path.abspath(__file__)
+    script_parent = os.path.dirname(script)
+    data_center = os.path.join(script_parent, "Data")
       
-    def __init__(self, file_name:str) :
-        # Save File Name
-        self.__file_name = file_name
-        self.__Address_file = os.path.join(self.Address_dataCenter, self.__file_name)
+    def __init__(self, file_name:str, dataTemplate) :
+        # Define File Name
+        self.__name = file_name
+        self.__path = os.path.join(self.data_center, self.__name) # dataCenter + filename = path
 
-        # Check Folder
-        if not os.path.exists(self.Address_dataCenter) :
-            os.mkdir(self.Address_dataCenter)
+        DataHandler.__checkDataCenter()
         
         # Check File
-        if os.path.exists(self.__Address_file) :
-            self.EverExists = True
+        if os.path.exists(self.__path) : # If this path exists:
+            self.__everExists = True
         else :
-            self.EverExists = False
-            
+            self.__everExists = False
+
+        if not self.__everExists: self.save(dataTemplate); data = dataTemplate # If file has not ever existed, push dataTemplate
+    
+    @staticmethod
+    def __checkDataCenter(autoMk=True):
+        data_center = DataHandler.data_center
+        if not os.path.exists(DataHandler.data_center): # If data center doesn't exist:
+            if autoMk: os.mkdir(data_center) # Create
+            return False
+        else:
+            return True
+        
     def save(self, data) :
         try :
-            if data != None:
-                with open(self.__Address_file, "w") as file :
-                    json.dump(data, file, indent=4) # Push
+            DataHandler.__checkDataCenter()
+            with open(self.__path, "w") as file :
+                json.dump(data, file, indent=4) # Push
         except FileNotFoundError as e:
             console.print(f"[bold red]Error while saving data: File Not Found [/]-- {e}")
         except Exception as e :
             console.print("[bold red]Error while saving data:", e)
     
-    def get(self) :
+    @property
+    def data(self) :
         try :
-            with open(self.__Address_file,"r") as file :
+            with open(self.__path,"r") as file :
                 data = json.load(file) # Pull
-
-            if data["Version"] != VERSION:
-                raise FileNotFoundError(f"[bold red]Wrong Version[/] -- Please Update Your Data First")
+            
+            if data["Version"] != VERSION: # Check Version
+                raise VersionError
 
             return data # Send
+        except VersionError:
+            console.print(f"[bold red]Wrong Version:[/] Please make sure that the data has exactly the same version as the calculator.")
         except FileNotFoundError as e:
             console.print(f"[bold red]Error while geting data:[/] File Not Found -- {e} -- Then restart the program.")
-            return None
         except Exception as e :
             console.print("[bold red]Error while geting data:", e)
-
-    def DoFirst(self, EmptyData) :
-        if self.EverExists == False :
-            self.save(EmptyData)
-            return EmptyData
-        else :
-            return self.get()
 
 # Functions
 def WhatsNew() :
@@ -295,7 +296,7 @@ def getMenuPanel():
     menu = Panel(menu_table, title="Menu", expand=False)
     return menu
 
-def Run(HistoriesFile, Data) :
+def Run(data) :
     Move()
     console.print(f"[bold underline white]{VERSION_MESSAGE}")
 
@@ -312,9 +313,9 @@ def Run(HistoriesFile, Data) :
             case "5": Power()
             case "6": Root()
             case "7": Factorial()
-            case "h": Data = ShowHistories(Data)
+            case "h": Data = ShowHistories(data)
             case "n": WhatsNew()
-            case "l" | "exit": HistoriesFile.save(Data); exit()
+            case "l" | "exit": return
             case _ :
                 Move()
                 console.print("[bold red]Invalid command.")
@@ -325,11 +326,18 @@ def Run(HistoriesFile, Data) :
 
         Move()
 
-# Code
-DataFile = DataHandler("All Data.json")
-Data = DataFile.DoFirst(Data)
+# Get Data
+data_template = {
+    "Version" : VERSION, 
+    "SaveHistories" : True,
+    "Histories" : []
+}
 
-if Data != None:
-    Run(DataFile, Data)
-else:
-    console.input("Enter To Leave")
+data_file = DataHandler("All Data.json", data_template)
+Data = data_file.data
+
+# Code
+Run(Data)
+
+# Save Data
+data_file.save(Data)
