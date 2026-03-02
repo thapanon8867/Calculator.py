@@ -8,6 +8,16 @@ import time
 import os
 import json
 
+# Import Rich
+try:
+    from rich.console import Console
+    from rich.layout import Layout
+    from rich.panel import Panel
+    from rich.table import Table
+    from rich.traceback import install as tbinstall
+except ModuleNotFoundError:
+    print("Please Install rich first")
+
 # Configs
 VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]} : What's new"
 SLEEP_TIME = 1
@@ -15,6 +25,10 @@ CLOSE_TIME = 4
 VALUEERROR = "Invalid input!: Try again."
 ZERODIVISIONERROR = "Cann't divided by zero!\n\n"
 ERROR = "An expected error occurred:"
+
+tbinstall(); del tbinstall
+console = Console()
+layout = Layout()
 
 # DataFile
 Data = {
@@ -345,7 +359,7 @@ def WhatNew() :
     )
 
 def Move() :
-    print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
+    console.clear()
 
 def ShowHistories() :
     global Data
@@ -385,59 +399,60 @@ def ShowHistories() :
 
         print(f"\n{State} -> {WillState}\n\n")
 
+def getMenuPanel():
+    # Create Menu Table
+    menu_table = Table(box=None, show_header=False)
+    menu_table.add_row("1.", "Plus")
+    menu_table.add_row("2.", "Minus")
+    menu_table.add_row("3.", "Times")
+    menu_table.add_row("4.", "Divide")
+    menu_table.add_row("5.", "Power")
+    menu_table.add_row("6.", "Root")
+    menu_table.add_row("7.", "!")
+    menu_table.add_row("c.", "Clear Screen")
+    menu_table.add_row("h.", "Histories")
+    menu_table.add_row("n.", "What's new?")
+    menu_table.add_row("l.", "Leave")
 
+    # Return Panel
+    menu = Panel(menu_table, title="Menu", expand=False)
+    return menu
 
 def Run(HistoriesFile, Data) :
     print(VERSION_MESSAGE)
 
     while True :
-        Input = input("Plus, Minus, Times, Divide, Power, Root, !, Move, Histories, Leave\n= ").strip().lower() ## Guide | Input -> Remove Space -> lower
+        console.print(getMenuPanel())
+        #Input = input("Plus, Minus, Times, Divide, Power, Root, !, Move, Histories, Leave\n= ").strip().lower() ## Guide | Input -> Remove Space -> lower
+        Input = console.input("[bold]Select Number > [/]")
 
         ## Operations
-        if Input in ("pl", "plus") :
-            Plus()
-
-        elif Input in ("mi", "minus") :
-            Minus()
-
-        elif Input in ("mu", "times") :
-            Times()
-
-        elif Input in ("di", "divide") :
-            Divide()
-
-        elif Input in ("ex", "power") :
-            Power()
-
-        elif Input in ("rt", "root") :
-            Root()
-        
-        elif Input == "!" :
-            Factorial()
-        
-        ## Functions
-        elif Input == "move" :
-            time.sleep(SLEEP_TIME)
-
-            Move()
-
-        elif Input in ("his", "histories") :
-            time.sleep(SLEEP_TIME)
-
-            ShowHistories()
-
-        elif Input in ("leave", "exit") :
-            HistoriesFile.save(Data)
-
-            time.sleep(CLOSE_TIME)
-
-            break
-        elif Input in ("what's new", "whats new") :
-            WhatNew()
-        
-        ## For Error
-        else :
-            print("\nInvalid command.\n\n")
+        match Input:
+            case "1" | "1.":
+                Plus()
+            case "2" | "2.":
+                Minus()
+            case "3" | "3.":
+                Times()
+            case "4" | "4.":
+                Divide()
+            case "5" | "5." :
+                Power()
+            case "6" | "6." :
+                Root()
+            case "7" | "7." :
+                Factorial()
+            case "c" | "c." :
+                Move()
+            case "h" | "h." :
+                ShowHistories()
+            case "n" | "n." :
+                WhatNew()
+            case "l" | "l." | "exit" :
+                HistoriesFile.save(Data)
+                exit()
+            case _ :
+                print("\nInvalid command.\n\n")
 
 # Code
 DataFile = DataHandler("All Data.json")
