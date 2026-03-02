@@ -239,16 +239,21 @@ def Move() :
 
 def ShowHistories(data) :
     histories = data["Histories"]
-    hisTable = Table(box=None, show_header=False)
 
-    if len(histories) == 0 :
+    # Create Table
+    hisTable = Table(box=None, header_style="bold")
+    hisTable.add_column("No.",justify="left",)
+    hisTable.add_column("Operation",justify="right")
+
+    if len(histories) == 0 : # if has no history
         hisTable.add_row(Align.center("[bold yellow]~~ No history ~~"))
     else :
-        for i in range(len(histories)) :
-            hisTable.add_row(histories[i])
+        for i, item in enumerate(histories, 1) :
+            hisTable.add_row(f"{str(i)}.", item)
 
+    # Panel
     hisPanel = Panel(hisTable, title="[bold]Calculation Histories", expand=False)
-    console.print(hisPanel)
+    console.print(hisPanel) # print Panel
     if data["SaveHistories"]: console.print(f"[bold][cyan]Save History? = [/cyan][green]{data["SaveHistories"]}")
     else: console.print(f"[bold][cyan]Save History? = [/cyan][red]{data["SaveHistories"]}")
 
