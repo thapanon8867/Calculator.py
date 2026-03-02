@@ -1,9 +1,9 @@
 # Python Calculator
-📌Terminal Calculator For Everyone📌<br/>
+📌Terminal Calculator For Window User📌<br/>
 
 > [!IMPORTANT]
 > You must download Python first. [Download Here](https://www.python.org/downloads/release/python-3143/)\
-> ***Python Version 3.14.3***<hr>
+> ***Python Version 3.14.3***
 > You must also install the “rich” library.\
 > **Use these command in your terminal:**
 > ```bash
