@@ -40,7 +40,7 @@ Data = {
     "Histories" : []
 }
 
-# Number Functions
+# Center Functions
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
     # Ask
     while True :
@@ -301,29 +301,17 @@ def Run(HistoriesFile, Data) :
 
         ## Operations
         match Input:
-            case "1":
-                Plus()
-            case "2":
-                Minus()
-            case "3":
-                Times()
-            case "4":
-                Divide()
-            case "5":
-                Power()
-            case "6":
-                Root()
-            case "7":
-                Factorial()
-            case "h":
-                ShowHistories()
-            case "n":
-                WhatsNew()
-            case "l" | "exit":
-                HistoriesFile.save(Data)
-                exit()
-            case _ :
-                console.print("[bold red]Invalid command.")
+            case "1": Plus()
+            case "2": Minus()
+            case "3": Times()
+            case "4": Divide()
+            case "5": Power()
+            case "6": Root()
+            case "7": Factorial()
+            case "h": ShowHistories()
+            case "n": WhatsNew()
+            case "l" | "exit": HistoriesFile.save(Data); exit()
+            case _ : console.print("[bold red]Invalid command."); continue
         
         with console.status("[blink dim]Press enter to continue", spinner="clock"):
             console.input()
