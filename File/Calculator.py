@@ -8,6 +8,7 @@ import time
 import os
 import json
 
+
 # Import Rich
 try:
     from rich.console import Console
@@ -19,12 +20,12 @@ except ModuleNotFoundError:
     print("Please Install rich first")
 
 # Configs
-VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]} : What's new"
+VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]}"
 SLEEP_TIME = 1
 CLOSE_TIME = 4
-VALUEERROR = "Invalid input!: Try again."
-ZERODIVISIONERROR = "Cann't divided by zero!\n\n"
-ERROR = "An expected error occurred:"
+VALUEERROR = "[bold red]Invalid input!: Try again."
+ZERODIVISIONERROR = "[bold red]Cann't divided by zero!"
+ERROR = "[bold red]An expected error occurred:"
 
 tbinstall(); del tbinstall
 console = Console()
@@ -38,40 +39,28 @@ Data = {
 }
 
 # Number Functions
-def Ask2number() :
+def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
     # Ask
     while True :
         try :
-            print("\n")
-
             #Ask A
-            a = float(input("A = ").replace(",", ""))
-            print(a,"\n")
-
+            a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
             #Ask B
-            b = float(input("B = ").replace(",", ""))
-            print(b,"\n")
-
+            b = float(console.input(f"[bold dim]{Bprompt}").replace(",", ""))
             break
         except ValueError :
-            print(VALUEERROR)
-    
+            console.print(VALUEERROR, "\n")
     return a, b
 
-def Ask1number() :
+def Ask1number(Aprompt="A? > ") :
     # Ask
     while True :
         try :
-            print("\n")
-
             #Ask A
-            a = float(input("A = ").replace(",", ""))
-            print(a,"\n")
-
+            a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
             break
         except ValueError :
-            print(VALUEERROR)
-    
+            console.print(VALUEERROR, "\n")
     return a
 
 # Operator Functions
@@ -79,181 +68,125 @@ def Plus() :
     try :
         # Ask
         a, b = Ask2number()
-
         # Calculate
         Answer = a + b
-        
         #Float -> Int
         if Answer == int(Answer) :
             Answer = int(Answer)
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} + {b} = {Answer}")
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} + {b} = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+        console.input(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 def Minus() :
     try :
         # Ask
         a, b = Ask2number()
-        
         # Calculate
         Answer = a - b
-
         #Float -> Int
-        if Answer == int(Answer) :
+        if Answer == int(Answer):
             Answer = int(Answer)
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} - {b} = {Answer}")
-    
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} - {b} = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+        console.input(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 def Times() :
-    try :
+    try:
         # Ask
         a, b = Ask2number()
-        
         # Calculate
         Answer = a * b
-        
         #Float -> Int
         if Answer == int(Answer) :
             Answer = int(Answer)
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} * {b} = {Answer}")
-
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} * {b} = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+        console.input(f"[bold yellow]Answer = {Answer}")
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 def Divide() :
     try :
         # Ask
         a, b = Ask2number()
-        
         # Calculate
-        Answer = int(a // b)
+        Answer = a / b
         Remander = int(a % b)
-        Answer_WithDecemal = a / b
         
-        #Float -> Int & # Show Answer
-        time.sleep(SLEEP_TIME)
-
-        if Remander == 0 :
-            print ("Answer =" , Answer_WithDecemal ,"\n\n")
-        elif Remander != 0 :
-            print ("Answer =" , Answer_WithDecemal, "\n")
-
-            if input() == "=" : ## Plus
-                time.sleep(SLEEP_TIME)
-
-                print ("\nAnswer =" , Answer)
-                print ("Remander =" , Remander ,"\n\n")
-                
-            
-
-            
-        else : raise
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} / {b} = {Answer}")
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} / {b} = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+            console.print(f"[bold yellow]Answer = {Answer}")
+            console.input(f"[dim yellow]Remander = {Remander}")
     except ZeroDivisionError :
-        print(ZERODIVISIONERROR)
+        console.print(ZERODIVISIONERROR)
     except Exception as Reason :
-        print("Have Something Error:" , Reason)
+        console.print(ERROR , Reason)
 
 def Power() :
     try :
         # Ask
-        a, b = Ask2number()
-        
+        a, b = Ask2number(Bprompt="Power of ")
         # Calculate
-        Answer = math.pow(a,b)
-        
+        Answer = a ** b
         #Float -> Int
         if Answer == int(Answer) :
             Answer = int(Answer)
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} ^ {b} = {Answer}")
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} ^ {b} = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+            console.input(f"[bold yellow]Answer = {Answer}")
 
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 def Root() :
     try :
-        # Custom Ask
-        while True :
-            try :
-                print("\n")
-
-                #Ask A
-                a = input("Sqr, Cqr = ")
-
-                #Check A -> Sqr = True, Cqr = False
-                if a == "Sqrt" or a == "2":
-                    a = "Sqrt"
-                elif a == "Cbrt" or a == "3" :
-                    a = "Cbrt"
-                else :
-                    raise ValueError
-                
-                print(a,"\n")
-
-                #Ask B
-                b = float(input(a+" of "))
-                print(b,"\n")
-
-                break
-            except ValueError :
-                print(VALUEERROR)
-        
+        # Ask
+        console.print("[bold green]nth root of a number")
+        n, a = Ask2number("n? > ", "a? > ")
         # Calculate
-        if b <= 0 :
-            raise ValueError
-
-        if a == "Sqrt" :
-            Answer = math.sqrt(b)
-        if a == "Cbrt" :
-            Answer = math.pow(b,1/3)
-        
+        if a <= 0 and a % 2 != 0 and n <= 0: raise ValueError
+        Answer = a ** (1/n)
         #Float -> Int
         if Answer == int(Answer) :
             Answer = int(Answer)
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a} of {b} = {Answer}")
-
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a} ^ ({1}/{n}) = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+            console.input(f"[bold yellow]Answer = {Answer}")
     except ValueError :
-        print(f"{VALUEERROR}\n\n")
+        console.print(VALUEERROR)
     except Exception as Reason :
         print(ERROR , Reason)
 
@@ -261,22 +194,20 @@ def Factorial() :
     try :
         # Ask
         a = Ask1number()
-        
         if int(a) != a or math.fabs(a) != a:
             raise ValueError
-
         # Calculate
         Answer = math.factorial(int(a))
 
-        # Show Answer
-        time.sleep(SLEEP_TIME)
-        print ("Answer =" , Answer ,"\n\n")
-
-        # Save
-        if Data["SaveHistories"] == True :
-            Data["Histories"].append(f"{a}! = {Answer}")
+        with console.status("[bold green]Thinking...") as _:
+            # Save
+            if Data["SaveHistories"] == True :
+                Data["Histories"].append(f"{a}! = {Answer}")
+            # Show Answer
+            time.sleep(SLEEP_TIME)
+            console.input(f"[bold yellow]Answer = {Answer}")
     except ValueError :
-        print(f"{VALUEERROR}\n\n")
+        console.print(VALUEERROR)
     except Exception as Reason :
         print(ERROR , Reason)
 
@@ -333,7 +264,6 @@ class DataHandler :
             return EmptyData
         else :
             return self.get()
-
 
 # Functions
 def WhatNew() :
@@ -409,7 +339,6 @@ def getMenuPanel():
     menu_table.add_row("5.", "Power")
     menu_table.add_row("6.", "Root")
     menu_table.add_row("7.", "!")
-    menu_table.add_row("c.", "Clear Screen")
     menu_table.add_row("h.", "Histories")
     menu_table.add_row("n.", "What's new?")
     menu_table.add_row("l.", "Leave")
@@ -419,40 +348,40 @@ def getMenuPanel():
     return menu
 
 def Run(HistoriesFile, Data) :
-    print(VERSION_MESSAGE)
+    console.print(f"[bold underline]{VERSION_MESSAGE}")
 
     while True :
         console.print(getMenuPanel())
-        #Input = input("Plus, Minus, Times, Divide, Power, Root, !, Move, Histories, Leave\n= ").strip().lower() ## Guide | Input -> Remove Space -> lower
-        Input = console.input("[bold]Select Number > [/]")
+        Input = console.input("[bold]Select Number > ").removesuffix(".")
 
         ## Operations
         match Input:
-            case "1" | "1.":
+            case "1":
                 Plus()
-            case "2" | "2.":
+            case "2":
                 Minus()
-            case "3" | "3.":
+            case "3":
                 Times()
-            case "4" | "4.":
+            case "4":
                 Divide()
-            case "5" | "5." :
+            case "5":
                 Power()
-            case "6" | "6." :
+            case "6":
                 Root()
-            case "7" | "7." :
+            case "7":
                 Factorial()
-            case "c" | "c." :
-                Move()
-            case "h" | "h." :
+            case "h":
                 ShowHistories()
-            case "n" | "n." :
+            case "n":
                 WhatNew()
-            case "l" | "l." | "exit" :
+            case "l" | "exit":
                 HistoriesFile.save(Data)
                 exit()
             case _ :
-                print("\nInvalid command.\n\n")
+                console.input("[bold red]Invalid command.")
+        
+        Move()
+
 
 # Code
 DataFile = DataHandler("All Data.json")
@@ -461,4 +390,4 @@ Data = DataFile.DoFirst(Data)
 if Data != None:
     Run(DataFile, Data)
 else:
-    input("Enter To Leave")
+    console.input("Enter To Leave")
