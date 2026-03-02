@@ -250,14 +250,14 @@ class DataHandler :
                 data = json.load(file) # Pull
 
             if data["Version"] != VERSION:
-                raise FileNotFoundError("Wrong Version -- Please Update Your Data First")
+                raise FileNotFoundError(f"[bold red]Wrong Version[/] -- Please Update Your Data First")
 
             return data # Send
         except FileNotFoundError as e:
-            print(f"Error while geting data: File Not Found -- {e} -- Then restart the program.")
+            console.print(f"[bold red]Error while geting data:[/] File Not Found -- {e} -- Then restart the program.")
             return None
         except Exception as e :
-            print("Error while geting data:", e)
+            console.print("[bold red]Error while geting data:", e)
 
     def DoFirst(self, EmptyData) :
         if self.EverExists == False :
