@@ -96,49 +96,48 @@ def Times() :
 
 def Divide() :
     try :
-        # Ask
         a, b = Ask2number()
+        with console.status("[bold green]Thinking..."):
+            # Finding Answer
+            answer = a / b
+            if answer == int(answer): answer = int(answer) # If can int then int
+            remainder = a % b
 
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = a / b
-            Remander = int(a % b)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} / {b} = {Answer}")
-            # Show Answer
+            # Saving
+            if Data["SaveHistories"]:
+                Data["Histories"].append(f"{a} / {b} = {answer}")
+            
             time.sleep(SLEEP_TIME)
-            console.print(f"[bold yellow]Answer = {Answer}")
-            console.print(f"[dim yellow]Remander = {Remander}")
+        console.print(f"[bold yellow]Answer = {answer}")
+        console.print(f"[dim yellow]Remainder = {remainder}")
     except ZeroDivisionError :
         console.print(ZERODIVISIONERROR)
     except OverflowError:
         console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    except Exception as e :
+        console.print(ERROR , e)
 
 def Power() :
     processOperation(lambda a, b: a ** b, "**", Bprompt="Power of ")
 
 def Root() :
     try :
-        # Ask
         console.print("[bold green]nth root of a number")
         n, a = Ask2number("n? > ", "a? > ")
+        with console.status("[bold green]Thinking..."):
+            if a <= 0 and n % 2 != 0: raise ValueError # base can't be below zero or zero when the index is a even number
+            if n <= 0: raise ValueError # index can't be below zero or zero
 
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            if a <= 0 and a % 2 != 0 and n <= 0: raise ValueError
-            Answer = a ** (1/n)
-            #Float -> Int
-            if Answer == int(Answer) :
-                Answer = int(Answer)
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a} ^ ({1}/{n}) = {Answer}")
-            # Show Answer
+            # Finding Answer
+            answer = a ** (1/n)
+            if answer == int(answer): answer = int(answer)
+
+            # Saving
+            if Data["SaveHistories"]:
+                Data["Histories"].append(f"{a} ^ (1/{n}) = {answer}")
+            
             time.sleep(SLEEP_TIME)
-            console.print(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {answer}")
     except ValueError :
         console.print(VALUEERROR)
     except OverflowError:
@@ -147,28 +146,26 @@ def Root() :
         console.print(ERROR , Reason)
 
 def Factorial() :
-    try :
-        # Ask
-        a = Ask1number()
-        if int(a) != a or math.fabs(a) != a:
-            raise ValueError
-        if a > 1000: raise OverflowError
+    try:
+        a = int(Ask1number())
+        with console.status("[bold green]Thinking..."):
+            if a > 1000: raise OverflowError
 
-        with console.status("[bold green]Thinking...") as _:
-            # Calculate
-            Answer = math.factorial(int(a))
-            # Save
-            if Data["SaveHistories"] == True :
-                Data["Histories"].append(f"{a}! = {Answer}")
-            # Show Answer
+            # Finding Answer
+            answer = math.factorial(a)
+
+            # Saving
+            if Data["SaveHistories"]:
+                Data["Histories"].append(f"{a}! = {answer}")
+            
             time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {Answer}")
+        console.print(f"[bold yellow]Answer = {answer}")
     except ValueError :
         console.print(VALUEERROR)
     except OverflowError:
         console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    except Exception as e :
+        console.print(ERROR , e)
 
 # Save Class
 class DataHandler :
