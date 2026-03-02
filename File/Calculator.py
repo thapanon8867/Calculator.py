@@ -12,6 +12,8 @@ import json
 # Import Rich
 try:
     from rich.console import Console
+    from rich.style import Style
+    from rich.align import Align
     from rich.layout import Layout
     from rich.panel import Panel
     from rich.table import Table
@@ -296,38 +298,38 @@ def ShowHistories() :
 
     histories = Data["Histories"]
 
-    # Show
-    print("\n--- Calculation Histories ---")
+    hisTable = Table(box=None, show_header=False)
 
     if len(histories) == 0 :
-        print("~~ No history ~~")
+        hisTable.add_row(Align.center("[bold yellow]~~ No history ~~"))
     else :
         for i in range(len(histories)) :
-            print(histories[i])
+            hisTable.add_row(histories[i])
 
-    print(f"-----------------------------\nSave History? = {Data["SaveHistories"]}\n-----------------------------")
+    hisPanel = Panel(hisTable, title="[bold]Calculation Histories", expand=False)
+    console.print(hisPanel)
+    if Data["SaveHistories"]: console.print(f"[bold][cyan]Save History? = [/cyan][green]{Data["SaveHistories"]}")
+    else: console.print(f"[bold][cyan]Save History? = [/cyan][red]{Data["SaveHistories"]}")
 
     # Del?
-    AddOn = input("\n")
-
-    if AddOn == "-" : # Clear History
-        if input("\nAre you sure you want to clear histories? [y/n]\n= ").lower() == "y" :
+    Input = console.input("[bold]Do you want to clear histories? \\[y/N]    ").lower()
+    if Input == "y":
+        with console.status("[bold green]Working...") as _: # Make Loading
             Data["Histories"] = []
-
             time.sleep(SLEEP_TIME)
-            
-            print("\nHistories cleared.\n\n")
-        else :
-            print("\n\n")
-    elif AddOn == "0" : # Toggle History
-        State = Data["SaveHistories"]
-        WillState = not Data["SaveHistories"]
-
-        Data["SaveHistories"] = not Data["SaveHistories"]
-
-        time.sleep(SLEEP_TIME)
-
-        print(f"\n{State} -> {WillState}\n\n")
+        console.print("    [bold yellow]Histories cleared.")
+    
+    # Toggle?
+    Input = console.input("[bold]Toggle histories? \\[y/N]    ").lower()
+    if Input == "y":
+        with console.status("[bold green]Working...") as _:
+            Data["SaveHistories"] = not Data["SaveHistories"]
+            time.sleep(SLEEP_TIME)
+        code = "green" if Data["SaveHistories"] else "red"
+        ncode = "red" if Data["SaveHistories"] else "green"
+        console.print(f"    [bold][yellow]Toggled from [/yellow][{ncode}]{not Data["SaveHistories"]}[/{ncode}] -> [{code}]{Data["SaveHistories"]}[/{code}].")
+    
+    console.input()
 
 def getMenuPanel():
     # Create Menu Table
@@ -348,6 +350,7 @@ def getMenuPanel():
     return menu
 
 def Run(HistoriesFile, Data) :
+    Move()
     console.print(f"[bold underline white]{VERSION_MESSAGE}")
 
     while True :
