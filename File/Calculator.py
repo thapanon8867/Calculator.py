@@ -310,9 +310,12 @@ def Run(HistoriesFile, Data) :
             case "h": Data = ShowHistories(Data)
             case "n": WhatsNew()
             case "l" | "exit": HistoriesFile.save(Data); exit()
-            case _ : console.print("[bold red]Invalid command."); continue
+            case _ :
+                Move()
+                console.print("[bold red]Invalid command.")
+                continue
         
-        with console.status("[blink dim]Press enter to continue", spinner="clock"):
+        with console.status("[dim italic]Press enter to continue", spinner="clock"):
             console.input()
 
         Move()
