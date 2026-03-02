@@ -26,6 +26,7 @@ SLEEP_TIME = 1
 CLOSE_TIME = 4
 VALUEERROR = "[bold red]Invalid input!: Try again."
 ZERODIVISIONERROR = "[bold red]Cann't divided by zero!"
+OVERFLOWERROR = "[bold red]Result is too large!"
 ERROR = "[bold red]An expected error occurred:"
 
 tbinstall(); del tbinstall
@@ -82,6 +83,8 @@ def Plus() :
             # Show Answer
             time.sleep(SLEEP_TIME)
         console.print(f"[bold yellow]Answer = {Answer}")
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -102,6 +105,8 @@ def Minus() :
             # Show Answer
             time.sleep(SLEEP_TIME)
         console.print(f"[bold yellow]Answer = {Answer}")
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -122,6 +127,8 @@ def Times() :
             # Show Answer
             time.sleep(SLEEP_TIME)
         console.print(f"[bold yellow]Answer = {Answer}")
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -143,6 +150,8 @@ def Divide() :
             console.print(f"[dim yellow]Remander = {Remander}")
     except ZeroDivisionError :
         console.print(ZERODIVISIONERROR)
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -163,7 +172,8 @@ def Power() :
             # Show Answer
             time.sleep(SLEEP_TIME)
             console.print(f"[bold yellow]Answer = {Answer}")
-
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
         console.print(ERROR , Reason)
 
@@ -188,8 +198,10 @@ def Root() :
             console.print(f"[bold yellow]Answer = {Answer}")
     except ValueError :
         console.print(VALUEERROR)
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 def Factorial() :
     try :
@@ -197,7 +209,8 @@ def Factorial() :
         a = Ask1number()
         if int(a) != a or math.fabs(a) != a:
             raise ValueError
-        
+        if a > 1000: raise OverflowError
+
         with console.status("[bold green]Thinking...") as _:
             # Calculate
             Answer = math.factorial(int(a))
@@ -209,8 +222,10 @@ def Factorial() :
         console.print(f"[bold yellow]Answer = {Answer}")
     except ValueError :
         console.print(VALUEERROR)
+    except OverflowError:
+        console.print(OVERFLOWERROR)
     except Exception as Reason :
-        print(ERROR , Reason)
+        console.print(ERROR , Reason)
 
 # Save Class
 class DataHandler :
