@@ -205,7 +205,7 @@ def Factorial() :
                 Data["Histories"].append(f"{a}! = {Answer}")
             # Show Answer
             time.sleep(SLEEP_TIME)
-            console.input(f"[bold yellow]Answer = {Answer}")
+        console.input(f"[bold yellow]Answer = {Answer}")
     except ValueError :
         console.print(VALUEERROR)
     except Exception as Reason :
@@ -348,7 +348,7 @@ def getMenuPanel():
     return menu
 
 def Run(HistoriesFile, Data) :
-    console.print(f"[bold underline]{VERSION_MESSAGE}")
+    console.print(f"[bold underline white]{VERSION_MESSAGE}")
 
     while True :
         console.print(getMenuPanel())
