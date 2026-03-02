@@ -78,3 +78,4 @@ except FileNotFoundError:
 # Complete
 console.print("    [bold green]Update data file successfully!")
 console.print("    [dim]Please replace your calculator.py with the new version before using the calculator.")
+load("quit")
