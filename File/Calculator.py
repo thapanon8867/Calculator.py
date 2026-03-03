@@ -38,31 +38,36 @@ layout = Layout()
 class VersionError(Exception): pass
 class ImaginaryError(Exception): pass
 
+def debug(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            if isinstance(e, ValueError): console.print(VALUEERROR)
+            elif isinstance(e, ZeroDivisionError): console.print(ZERODIVISIONERROR)
+            elif isinstance(e, OverflowError): console.print(OVERFLOWERROR)
+            elif isinstance(e,ImaginaryError): console.print(IMAGINARYERROR, e)
+            else: console.print(ERROR, e)
+    return wrapper
+
 # Center Functions
+@debug
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
-    # Ask
-    while True :
-        try :
-            #Ask A
-            a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
-            #Ask B
-            b = float(console.input(f"[bold dim]{Bprompt}").replace(",", ""))
-            break
-        except ValueError :
-            console.print(VALUEERROR, "\n")
+    #Ask A
+    a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
+    #Ask B
+    b = float(console.input(f"[bold dim]{Bprompt}").replace(",", ""))
+
     return a, b
 
+@debug
 def Ask1number(Aprompt="A? > ") :
-    # Ask
-    while True :
-        try :
-            #Ask A
-            a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
-            break
-        except ValueError :
-            console.print(VALUEERROR, "\n")
+    #Ask A
+    a = float(console.input(f"[bold dim]{Aprompt}").replace(",", ""))
+
     return a
 
+@debug
 def processOperation(
         format_str: str,
         *op_func,
@@ -72,47 +77,36 @@ def processOperation(
         answer_messages: tuple = ["Answer"],
         safety_func = None
 ) -> None:
-    
-    try:
-        a, b = None, None
 
-        if mode == 1: a = Ask1number(Aprompt)
-        else: a, b = Ask2number(Aprompt, Bprompt); mode = 2
+    a, b = 0, 0
 
-        if safety_func and mode == 2: safety_func(a, b) # Do safely
-        elif safety_func and mode == 1: safety_func(a)
+    if mode == 1: a = Ask1number(Aprompt)
+    else: a, b = Ask2number(Aprompt, Bprompt); mode = 2
 
-        with console.status("[bold green]Thinking..."):
-            # Finding Answer(s)
-            answers = []
-            for func in op_func: # Loop for all method
-                # Do the method
-                if mode == 2: answer = func(a, b)
-                elif mode == 1: answer = func(a)
+    if safety_func and mode == 2: safety_func(a, b) # Do safely
+    elif safety_func and mode == 1: safety_func(a)
 
-                if isinstance(answer, float) and answer.is_integer(): answer = int(answer) # If can int then int
-                answers.append(answer)
-            
-            # Saving
-            if Data["SaveHistories"]:
-                save_msg = format_str.format(a, b, answers[0])
-                Data["Histories"].append(save_msg)
-            
-            time.sleep(SLEEP_TIME)
-        # Printing Answer(s)
-        for i, msg in enumerate(answer_messages): # i <- index | msg <- answer_message <- answer_messages
-            style = "bold yellow" if i == 0 else "dim yellow"
-            console.print(f"[{style}]{msg} = {answers[i]}")
-    except ValueError:
-        console.print(VALUEERROR)
-    except ZeroDivisionError :
-        console.print(ZERODIVISIONERROR)
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except ImaginaryError as e:
-        console.print(IMAGINARYERROR, e)
-    except Exception as e:
-        console.print(ERROR, e)
+    with console.status("[bold green]Thinking..."):
+        # Finding Answer(s)
+        answers = []
+        for func in op_func: # Loop for all method
+            # Do the method
+            if mode == 2: answer = func(a, b)
+            elif mode == 1: answer = func(a)
+
+            if isinstance(answer, float) and answer.is_integer(): answer = int(answer) # If can int then int
+            answers.append(answer)
+        
+        # Saving
+        if Data["SaveHistories"]:
+            save_msg = format_str.format(a, b, answers[0])
+            Data["Histories"].append(save_msg)
+        
+        time.sleep(SLEEP_TIME)
+    # Printing Answer(s)
+    for i, msg in enumerate(answer_messages): # i <- index | msg <- answer_message <- answer_messages
+        style = "bold yellow" if i == 0 else "dim yellow"
+        console.print(f"[{style}]{msg} = {answers[i]}")
 
 # Operator Functions
 def Plus() :
