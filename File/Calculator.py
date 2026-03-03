@@ -27,6 +27,7 @@ CLOSE_TIME = 4
 VALUEERROR = "[bold red]Invalid input!: Try again."
 ZERODIVISIONERROR = "[bold red]Cann't divided by zero!"
 OVERFLOWERROR = "[bold red]Result is too large!"
+IMAGINARYERROR = "[bold red]ImaginaryError:"
 ERROR = "[bold red]An expected error occurred:"
 
 tbinstall(); del tbinstall
@@ -35,6 +36,7 @@ layout = Layout()
 
 # Custom Errors
 class VersionError(Exception): pass
+class ImaginaryError(Exception): pass
 
 # Center Functions
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
@@ -61,107 +63,88 @@ def Ask1number(Aprompt="A? > ") :
             console.print(VALUEERROR, "\n")
     return a
 
-def processOperation(op_func, symbol, Aprompt="A? > ", Bprompt="B? > "):
+def processOperation(
+        format_str: str,
+        *op_func,
+        mode: int = 2,
+        Aprompt: str = "A? > ",
+        Bprompt: str = "B? > ",
+        answer_messages: tuple = ["Answer"],
+        safety_func = None
+) -> None:
+    
     try:
-        a, b = Ask2number(Aprompt, Bprompt)
-        with console.status("[bold green]Thinking..."):
-            # Finding Answer
-            answer = op_func(a,b)
-            if answer == int(answer): answer = int(answer) # If can int then int
+        a, b = None, None
 
+        if mode == 1: a = Ask1number(Aprompt)
+        else: a, b = Ask2number(Aprompt, Bprompt); mode = 2
+
+        if safety_func and mode == 2: safety_func(a, b) # Do safely
+        elif safety_func and mode == 1: safety_func(a)
+
+        with console.status("[bold green]Thinking..."):
+            # Finding Answer(s)
+            answers = []
+            for func in op_func: # Loop for all method
+                # Do the method
+                if mode == 2: answer = func(a, b)
+                elif mode == 1: answer = func(a)
+
+                if isinstance(answer, float) and answer.is_integer(): answer = int(answer) # If can int then int
+                answers.append(answer)
+            
             # Saving
             if Data["SaveHistories"]:
-                Data["Histories"].append(f"{a} {symbol} {b} = {answer}")
+                save_msg = format_str.format(a, b, answers[0])
+                Data["Histories"].append(save_msg)
             
             time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {answer}")
+        # Printing Answer(s)
+        for i, msg in enumerate(answer_messages): # i <- index | msg <- answer_message <- answer_messages
+            style = "bold yellow" if i == 0 else "dim yellow"
+            console.print(f"[{style}]{msg} = {answers[i]}")
+    except ValueError:
+        console.print(VALUEERROR)
+    except ZeroDivisionError :
+        console.print(ZERODIVISIONERROR)
     except OverflowError:
         console.print(OVERFLOWERROR)
+    except ImaginaryError as e:
+        console.print(IMAGINARYERROR, e)
     except Exception as e:
         console.print(ERROR, e)
 
 # Operator Functions
 def Plus() :
-    processOperation(lambda a, b: a + b, "+")
+    processOperation("{0} + {1} = {2}", lambda a, b: a + b)
 
 def Minus() :
-    processOperation(lambda a, b: a - b, "-")
+    processOperation("{0} - {1} = {2}", lambda a, b: a - b)
 
 def Times() :
-    processOperation(lambda a, b: a * b, "*")
+    processOperation("{0} * {1} = {2}", lambda a, b: a * b)
 
 def Divide() :
-    try :
-        a, b = Ask2number()
-        with console.status("[bold green]Thinking..."):
-            # Finding Answer
-            answer = a / b
-            if answer == int(answer): answer = int(answer) # If can int then int
-            remainder = a % b
-
-            # Saving
-            if Data["SaveHistories"]:
-                Data["Histories"].append(f"{a} / {b} = {answer}")
-            
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {answer}")
-        console.print(f"[dim yellow]Remainder = {remainder}")
-    except ZeroDivisionError :
-        console.print(ZERODIVISIONERROR)
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as e :
-        console.print(ERROR , e)
+    processOperation("{0} / {1} = {2}", lambda a, b: a / b, lambda a, b: a % b, answer_messages=[
+        "Answer",
+        "Remainder"
+    ])
 
 def Power() :
-    processOperation(lambda a, b: a ** b, "**", Bprompt="Power of ")
+    processOperation("{0} ^ {1} = {2}", lambda a, b: a ** b, Bprompt="Power of ")
 
 def Root() :
-    try :
-        console.print("[bold green]nth root of a number")
-        n, a = Ask2number("n? > ", "a? > ")
-        with console.status("[bold green]Thinking..."):
-            if a <= 0 and n % 2 != 0: raise ValueError # base can't be below zero or zero when the index is a even number
-            if n <= 0: raise ValueError # index can't be below zero or zero
-
-            # Finding Answer
-            answer = a ** (1/n)
-            if answer == int(answer): answer = int(answer)
-
-            # Saving
-            if Data["SaveHistories"]:
-                Data["Histories"].append(f"{a} ^ (1/{n}) = {answer}")
-            
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {answer}")
-    except ValueError :
-        console.print(VALUEERROR)
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as Reason :
-        console.print(ERROR , Reason)
+    def logic(n, a):
+        if n == 0: raise ZeroDivisionError("Root index cannot be zero.")
+        if n % 2 == 0 and a < 0: raise ImaginaryError("Even root of negative number results in complex number (i).")
+        if a == 0 and n < 0: raise ZeroDivisionError("Zero cannot be raised to a negative power.")
+    processOperation("{1} ^ (1/{0}) = {2}", lambda n, a: a ** (1/n), Aprompt="n? > ", Bprompt="A? > ", safety_func=logic)
 
 def Factorial() :
-    try:
-        a = int(Ask1number())
-        with console.status("[bold green]Thinking..."):
-            if a > 1000: raise OverflowError
-
-            # Finding Answer
-            answer = math.factorial(a)
-
-            # Saving
-            if Data["SaveHistories"]:
-                Data["Histories"].append(f"{a}! = {answer}")
-            
-            time.sleep(SLEEP_TIME)
-        console.print(f"[bold yellow]Answer = {answer}")
-    except ValueError :
-        console.print(VALUEERROR)
-    except OverflowError:
-        console.print(OVERFLOWERROR)
-    except Exception as e :
-        console.print(ERROR , e)
+    def logic(a:float):
+        if a > 1000: raise OverflowError
+        if not a.is_integer(): raise ValueError
+    processOperation("{0}! = {2}", lambda a: math.factorial(int(a)), mode=1, safety_func=logic)
 
 # Save Class
 class DataHandler :
