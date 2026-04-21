@@ -1,13 +1,12 @@
 # Calculator.py
 VERSION = [1, 12, 0, None]
 
-# Import things
+# ===== Import things =====
 import math
 import time
 import os
 import json
-
-# Import Rich
+# Rich
 try:
     from rich.console import Console
     from rich.align import Align
@@ -20,7 +19,7 @@ except ModuleNotFoundError:
     input("Please Install rich first.")
     exit()
 
-# Configs
+# ===== Configs =====
 VERSION_MESSAGE = f"Version {VERSION[0]}.{VERSION[1]}.{VERSION[2]}"
 SLEEP_TIME = 1
 CLOSE_TIME = 4
@@ -34,7 +33,7 @@ tbinstall(); del tbinstall
 console = Console()
 layout = Layout()
 
-# Custom Errors
+# ===== Errors Handling =====
 class VersionError(Exception): pass
 class ImaginaryError(Exception): pass
 
@@ -50,7 +49,7 @@ def debug(func):
             else: console.print(ERROR, e)
     return wrapper
 
-# Center Functions
+# ===== Main Functions =====
 @debug
 def Ask2number(Aprompt="A? > ", Bprompt="B? > ") :
     #Ask A
@@ -108,7 +107,7 @@ def processOperation(
         style = "bold yellow" if i == 0 else "dim yellow"
         console.print(f"[{style}]{msg} = {answers[i]}")
 
-# Operator Functions
+# ===== Operator Functions =====
 def Plus() :
     processOperation("{0} + {1} = {2}", lambda a, b: a + b)
 
@@ -140,13 +139,13 @@ def Factorial() :
         if not a.is_integer(): raise ValueError
     processOperation("{0}! = {2}", lambda a: math.factorial(int(a)), mode=1, safety_func=logic)
 
-# Save Class
+# ===== Data =====
 class DataHandler :
     # Locate data center
     script = os.path.abspath(__file__)
     script_parent = os.path.dirname(script)
     data_center = os.path.join(script_parent, "Data")
-      
+    
     def __init__(self, file_name:str, dataTemplate) :
         # Define File Name
         self.__name = file_name
@@ -198,7 +197,7 @@ class DataHandler :
         except Exception as e :
             console.print("[bold red]Error while geting data:", e)
 
-# Functions
+# ===== Other Functions =====
 def WhatsNew() :
     message = Table(box=None, show_header=False)
     message.add_row("1.", "Fix any unclear operation descriptions.")
@@ -302,13 +301,13 @@ def Run(data) :
 
         Move()
 
+# ===== MAIN =====
 data_template = {
     "Version" : VERSION, 
     "SaveHistories" : True,
     "Histories" : []
 }
 
-# Code
 try:
     # Get Data
     data_file = DataHandler("All Data.json", data_template)
